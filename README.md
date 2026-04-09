@@ -13,4 +13,4 @@
 7. Tampilan ke 7
    ![Form Aplikasi](images/form7.png)
 8. Tampilan ke 8
-   ![Form Aplikasi](images/form4.png)
+   ![Form Aplikasi](images/form8.png)
