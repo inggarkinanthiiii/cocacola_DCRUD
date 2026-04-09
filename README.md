@@ -10,7 +10,7 @@
    ![Form Aplikasi](images/form5.png)
 6. Tampilan ke 6
    ![Form Aplikasi](images/form6.png)
-7. Tampilan ke 3
-   ![Form Aplikasi](images/form3.png)
-8. Tampilan ke 4
+7. Tampilan ke 7
+   ![Form Aplikasi](images/form7.png)
+8. Tampilan ke 8
    ![Form Aplikasi](images/form4.png)
