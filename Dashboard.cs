@@ -93,6 +93,12 @@ namespace CRUDMahasiswaADO
                     dt = dbLogic.getAllDataChart();
                 }
 
+                if (dt == null || dt.Rows.Count == 0)
+                {
+                    MessageBox.Show("Tidak ada data untuk ditampilkan");
+                    return;
+                }
+
                 SeriesChartType tipe =
                     (SeriesChartType)cmbTipe.SelectedValue;
 

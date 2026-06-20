@@ -20,12 +20,10 @@ namespace CRUDMahasiswaADO
         private DataTable dtMahasiswa = new DataTable();
         private BindingSource bsMahasiswa = new BindingSource();
 
-        private string connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=DBAkademikADO;User ID=sa;Password=123456789";
-
         private void SimpanLog(string pesan)
         {
             using (SqlConnection conn =
-                new SqlConnection(connectionString))
+                new SqlConnection(DAL.GetConnectionString()))
             {
                 string query =
                     "INSERT INTO LogError(PesanError) VALUES(@Pesan)";
@@ -41,12 +39,12 @@ namespace CRUDMahasiswaADO
         }
         public void simpanLog(string message)
         {
-           
+            SimpanLog(message);
         }
         public Form1()
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
+            conn = new SqlConnection(DAL.GetConnectionString());
         }
 
         // 🔹 Method koneksi database
@@ -260,8 +258,9 @@ namespace CRUDMahasiswaADO
                     using (MemoryStream ms =
                         new MemoryStream(imgBytes))
                     {
-                        fotoMhs.Image =
-                            Image.FromStream(ms);
+                        Image originalImage = Image.FromStream(ms);
+                        fotoMhs.Image = new Bitmap(originalImage);
+                        originalImage.Dispose();
 
                         fotoMhs.SizeMode =
                             PictureBoxSizeMode.StretchImage;
@@ -324,15 +323,19 @@ namespace CRUDMahasiswaADO
         {
             try
             {
-                bsMahasiswa.DataSource =
-                    dbLogic.GetMhs();
+                DataTable dt = dbLogic.GetMhs();
 
-                dataGridView1.DataSource =
-                    bsMahasiswa;
+                if (dt == null || dt.Rows.Count == 0)
+                {
+                    MessageBox.Show("Tidak ada data mahasiswa.");
+                    dataGridView1.DataSource = null;
+                    return;
+                }
+
+                bsMahasiswa.DataSource = dt;
+                dataGridView1.DataSource = bsMahasiswa;
 
                 HitungTotal();
-
-                BindControls();
 
                 dataGridView1.Enabled = true;
             }
@@ -344,22 +347,7 @@ namespace CRUDMahasiswaADO
                     "Gagal load data : " + ex.Message);
             }
         }
-        private void BindControls()
-        {
-            txtNIM.DataBindings.Clear();
-            txtNama.DataBindings.Clear();
-            cmbJK.DataBindings.Clear();
-            dtpTanggalLahir.DataBindings.Clear();
-            txtAlamat.DataBindings.Clear();
-            txtKodeProdi.DataBindings.Clear();
 
-            txtNIM.DataBindings.Add("Text", bsMahasiswa, "NIM");
-            txtNama.DataBindings.Add("Text", bsMahasiswa, "Nama");
-            cmbJK.DataBindings.Add("Text", bsMahasiswa, "JenisKelamin");
-            dtpTanggalLahir.DataBindings.Add("Value", bsMahasiswa, "TanggalLahir");
-            txtAlamat.DataBindings.Add("Text", bsMahasiswa, "Alamat");
-            txtKodeProdi.DataBindings.Add("Text", bsMahasiswa, "KodeProdi");
-        }
         private void btnDelete_Click(object sender, EventArgs e)
         {
             try
@@ -419,14 +407,14 @@ namespace CRUDMahasiswaADO
                 SimpanLog(ex.Message);
 
                 MessageBox.Show(
-                    "SQL Error : " + ex.Message);
+                    "SQL Error : " + ex.ToString());
             }
             catch (Exception ex)
             {
                 SimpanLog(ex.Message);
 
                 MessageBox.Show(
-                    "General Error : " + ex.Message);
+                    "General Error : " + ex.ToString());
             }
         }
 

@@ -16,9 +16,6 @@ namespace CRUDMahasiswaADO
         DAL dbLogic = new DAL();
         private SqlConnection conn;
 
-        private string connectionString =
-            "Data Source=.\\SQLEXPRESS;Initial Catalog=DBAkademikADO;User ID=sa;Password=123456789";
-
         SqlDataAdapter da;
 
         DataTable dtMahasiswa;
@@ -28,7 +25,7 @@ namespace CRUDMahasiswaADO
         {
             InitializeComponent();
 
-            conn = new SqlConnection(connectionString);
+            conn = new SqlConnection(DAL.GetConnectionString());
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -96,6 +93,13 @@ namespace CRUDMahasiswaADO
                     "Gagal load data : " +
                     ex.Message);
             }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
@@ -133,63 +137,14 @@ namespace CRUDMahasiswaADO
             {
                 MessageBox.Show("Gagal load data: " + ex.Message);
             }
-
-        }
-
-        private void FormRekapMahasiswa_Load_1(object sender, EventArgs e)
-        {
-
-            dtpTanggalMasuk.Format =
-                DateTimePickerFormat.Custom;
-
-            dtpTanggalMasuk.CustomFormat = "yyyy";
-
-            dtpTanggalMasuk.ShowUpDown = true;
-
-            dtpTanggalMasuk.MinDate =
-                new DateTime(2000, 1, 1);
-
-            dtpTanggalMasuk.MaxDate =
-                DateTime.Now;
-
-            cmbProdi.DropDownStyle =
-                ComboBoxStyle.DropDownList;
-
-            btnCetak.Enabled = false;
-
-            try
+            finally
             {
-                if (conn.State == ConnectionState.Closed)
+                if (conn.State == ConnectionState.Open)
                 {
-                    conn.Open();
+                    conn.Close();
                 }
-
-                SqlCommand cmd =
-                    new SqlCommand(
-                        "SELECT namaprodi FROM programstudi",
-                        conn);
-
-                cmd.CommandType =
-                    CommandType.Text;
-
-                dtProdi = new DataTable();
-
-                da = new SqlDataAdapter(cmd);
-
-                da.Fill(dtProdi);
-
-                cmbProdi.DataSource = dtProdi;
-
-                cmbProdi.DisplayMember = "namaprodi";
-
-                cmbProdi.ValueMember = "namaprodi";
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    "Gagal load data : " +
-                    ex.Message);
-            }
+
         }
 
         private void btnCetak_Click(

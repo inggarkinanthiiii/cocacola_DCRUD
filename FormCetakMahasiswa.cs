@@ -8,15 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CrystalDecisions.Shared;
 
 namespace CRUDMahasiswaADO
 {
     public partial class FormCetakMahasiswa : Form
     {
         private SqlConnection conn;
-
-        private string connectionString =
-            "Data Source=.\\SQLEXPRESS;Initial Catalog=DBAkademikADO;User ID=sa;Password=123456789";
 
         SqlDataAdapter da;
         DataTable dtMahasiswa;
@@ -32,7 +30,7 @@ namespace CRUDMahasiswaADO
             prodi = Prodi;
             tglMasuk = TglMasuk;
 
-            conn = new SqlConnection(connectionString);
+            conn = new SqlConnection(DAL.GetConnectionString());
 
             try
             {
@@ -69,9 +67,14 @@ namespace CRUDMahasiswaADO
 
                 rpt.SetDataSource(dtMahasiswa);
 
-                crystalReportViewer2.ReportSource =
-                    rpt;
+                // Set Crystal Reports connection info for security
+                ConnectionInfo crConnectionInfo = new ConnectionInfo();
+                crConnectionInfo.ServerName = ".";
+                crConnectionInfo.DatabaseName = "DBAkademikADO";
+                crConnectionInfo.UserID = "sa";
+                crConnectionInfo.Password = "123456789";
 
+                crystalReportViewer2.ReportSource = rpt;
                 crystalReportViewer2.Refresh();
             }
             catch (Exception ex)
@@ -79,6 +82,13 @@ namespace CRUDMahasiswaADO
                 MessageBox.Show(
                     "Gagal load data : " +
                     ex.Message);
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
             }
         }
     }

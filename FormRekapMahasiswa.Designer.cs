@@ -134,7 +134,7 @@
             this.Controls.Add(this.dtpTanggalMasuk);
             this.Name = "FormRekapMahasiswa";
             this.Text = "FormRekapMahasiswa";
-            this.Load += new System.EventHandler(this.FormRekapMahasiswa_Load_1);
+            this.Load += new System.EventHandler(this.FormRekapMahasiswa_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
