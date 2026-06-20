@@ -1,3 +1,11 @@
 <Solution>
-  <Project Path="CRUDMahasiswaADO.csproj" Id="a654ba81-ea25-4762-813f-2d72b6cfcbfb" />
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="CRUDMahasiswaADO.csproj" Id="a654ba81-ea25-4762-813f-2d72b6cfcbfb">
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+  </Project>
 </Solution>
